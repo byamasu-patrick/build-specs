@@ -7,3 +7,9 @@ export function encodeUrl(input: string): string {
 export function decodeUrl(input: string): string {
   return Buffer.from(input, "base64").toString("utf8"); // Return the decoded string
 }
+
+export function classNames(
+  ...classes: Array<string | undefined | false | null>
+): string {
+  return classes.filter(Boolean).join(" ");
+}
