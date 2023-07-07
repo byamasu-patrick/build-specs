@@ -1,15 +1,8 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import supabaseClient from "@/utils/supabaseBrowserClient";
-import { decodeUrl, encodeUrl } from "@/utils/common";
-import {
-  AuthResponse,
-  ResendParams,
-  VerifyEmailOtpParams,
-  VerifyOtpParams,
-} from "@supabase/supabase-js";
+import { ResendParams, VerifyEmailOtpParams } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import SuccessAlert from "@/components/widget/success-alert";
 import { ParsedUrlQuery } from "querystring";
@@ -34,13 +27,12 @@ async function verifyAccount(values: { token: string; email: string }) {
 
 export default function ForgotPassword() {
   // Access the client
-  const queryClient = useQueryClient();
   const [isResendSuccessful, setIsResendSuccessful] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
   const router = useRouter();
   const params: ParsedUrlQuery = router.query;
-  const _q = params["_q"] as string;
+  // const _q = params["_q"] as string;
 
   const initialValues: { token: string } = {
     token: "",
@@ -75,14 +67,14 @@ export default function ForgotPassword() {
     initialValues,
     validationSchema: signSchema,
     onSubmit: async (values) => {
-      verifyAccountMutation({ ...values, email: _q });
+      verifyAccountMutation({ ...values, email: params["_q"] as string });
     },
   });
 
   const resendEmail = async () => {
     try {
       const { data, error } = await supabaseClient.auth.resend({
-        email: _q,
+        email: params["_q"] as string,
         type: "signup",
       } as ResendParams);
 

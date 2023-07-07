@@ -7,6 +7,7 @@ import { decodeUrl } from "@/utils/common";
 import { useEffect } from "react";
 import { VerifyEmailOtpParams } from "@supabase/supabase-js";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { ParsedUrlQuery } from "querystring";
 
 const signupSchema = Yup.object().shape({
   token: Yup.string()
@@ -49,7 +50,7 @@ export default function ResetPassword() {
   // Access the client
   const queryClient = useQueryClient();
   const router = useRouter();
-  const { _q } = router.query;
+  const params: ParsedUrlQuery = router.query;
 
   console.log(decodeUrl(_q as string));
 
@@ -81,7 +82,7 @@ export default function ResetPassword() {
     onSubmit: async (values) => {
       resetPasswordMutation({
         ...values,
-        email: decodeUrl(_q as string),
+        email: decodeUrl(params["_q"] as string as string),
       });
     },
   });

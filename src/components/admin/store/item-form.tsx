@@ -1,11 +1,10 @@
-import { getClient, postClient } from "@/services/supabase-service";
+import { postClient } from "@/services/supabase-service";
 import {
   CarOptionsSchemaType,
   FormikCarOptionsSchemaType,
 } from "@/types/zod-schema/cars-option-schema";
 import supabaseClient from "@/utils/supabaseBrowserClient";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import * as Yup from "yup";
