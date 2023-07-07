@@ -54,7 +54,7 @@ async function createCarInformation(values: FormikCarOptionsSchemaType) {
 }
 
 export function ItemForm({ setIsNewCar }: ItemProps) {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const {
     data,
