@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { supabaseClient } from "@/utils/supabaseBrowserClient";
+import supabaseClient from "@/utils/supabaseBrowserClient";
 import { encodeUrl } from "@/utils/common";
 
 // Define the validation schema
