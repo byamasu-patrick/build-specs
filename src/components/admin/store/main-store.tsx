@@ -1,11 +1,13 @@
 import { classNames } from "@/utils/common";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewCarItem from "./new-item";
 import supabaseClient from "@/utils/supabaseBrowserClient";
-import { getClient } from "@/services/supabase-service";
-import { useQuery } from "@tanstack/react-query";
+import { deleteClient, getClient } from "@/services/supabase-service";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CreateCarOptionsSchemaType } from "@/types/zod-schema/cars-option-schema";
 import { ResponseType } from "@/types/api/api-schema";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import WarningModal from "@/components/widget/cars/delete-modal";
 
 async function getCarsFromSupabase(): Promise<
   CreateCarOptionsSchemaType[] | []
@@ -18,20 +20,57 @@ async function getCarsFromSupabase(): Promise<
 
   return response.data as CreateCarOptionsSchemaType[];
 }
+
+async function deleteCarFromSupabase(id: number): Promise<ResponseType> {
+  const { data } = await supabaseClient.auth.getSession();
+  const response = (await deleteClient(
+    `/api/cars/${id}`,
+    data.session?.access_token as string
+  )) as ResponseType;
+
+  return response;
+}
 export function MainStore() {
+  const queryClient = useQueryClient();
   const [isNewCar, setIsNewCar] = useState<boolean>(false);
+  const [carId, setCarId] = useState<number>(-1);
+  const [isWarningOpen, setIsWarningOpen] = useState<boolean>(false);
 
   const {
     isLoading,
     isError,
     data: carsData,
-    error: carsError,
   } = useQuery({
     queryKey: ["cars"],
     queryFn: getCarsFromSupabase,
   });
 
-  console.log(carsData);
+  const {
+    isLoading: deleting,
+    data: deletedData,
+    error: deleteError,
+    isSuccess: isDeleteSuccess,
+    mutate: deleteCar,
+  } = useMutation({
+    mutationFn: deleteCarFromSupabase,
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["cars"] });
+    },
+  });
+
+  const handleCarDeletion = () => {
+    if (carId !== -1) {
+      deleteCar(carId);
+    }
+  };
+
+  useEffect(() => {
+    if (isDeleteSuccess && deletedData) {
+      setIsWarningOpen(false);
+    }
+  }, [isDeleteSuccess, deleteError, deletedData]);
+
   // convertUnderscoreToCamelCase
   const renderCardOptionInfos = () => (
     <table className="min-w-full border-separate border-spacing-0">
@@ -39,52 +78,57 @@ export function MainStore() {
         <tr>
           <th
             scope="col"
-            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
+            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-6"
           >
             Make
           </th>
           <th
             scope="col"
-            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
+            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-6"
           >
             Model
           </th>
           <th
             scope="col"
-            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
+            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-6"
           >
             Version
           </th>
           <th
             scope="col"
-            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
+            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-6"
           >
             Engine Size
           </th>
           <th
             scope="col"
-            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
+            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-6"
           >
             Build Date
           </th>
           <th
             scope="col"
-            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
+            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-6"
           >
             Doors
           </th>
           <th
             scope="col"
-            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
+            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-6"
           >
             Fuel
           </th>
-
           <th
             scope="col"
-            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
+            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-6"
           >
-            <span className="sr-only">Edit</span>
+            Edit
+          </th>
+          <th
+            scope="col"
+            className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-6"
+          >
+            Delete
           </th>
         </tr>
       </thead>
@@ -97,7 +141,7 @@ export function MainStore() {
                     carIndex !== carsData.length - 1
                       ? "border-b border-gray-200"
                       : "",
-                    "whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8"
+                    "whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-4 lg:pl-6"
                   )}
                 >
                   {car.make}
@@ -162,17 +206,43 @@ export function MainStore() {
                 >
                   {car.fuel}
                 </td>
+
                 <td
                   className={classNames(
                     carIndex !== carsData.length - 1
                       ? "border-b border-gray-200"
                       : "",
-                    "relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8"
+                    "relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium"
                   )}
                 >
                   <a href="#" className="text-slate-800 hover:text-slate-950">
                     Edit<span className="sr-only">, {car.make}</span>
                   </a>
+                </td>
+
+                <td
+                  className={classNames(
+                    carIndex !== carsData.length - 1
+                      ? "border-b border-gray-200"
+                      : "",
+                    "relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium"
+                  )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsWarningOpen(true);
+                      setCarId(car.id);
+                      //
+                    }}
+                  >
+                    {" "}
+                    <TrashIcon
+                      width={20}
+                      className="text-red-600 ml-6 hover:text-red-900"
+                      height={20}
+                    />
+                  </button>
                 </td>
               </tr>
             ))
@@ -183,6 +253,16 @@ export function MainStore() {
 
   return (
     <>
+      {isWarningOpen && (
+        <WarningModal
+          isLoading={deleting}
+          isWarningOpen={isWarningOpen}
+          setIsWarningOpen={setIsWarningOpen}
+          message="Are you sure you want to delete this record?"
+          title="Delete vehicle record"
+          handleDeletion={handleCarDeletion}
+        />
+      )}
       {isNewCar && <NewCarItem isNewCar={isNewCar} setIsNewCar={setIsNewCar} />}
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center">

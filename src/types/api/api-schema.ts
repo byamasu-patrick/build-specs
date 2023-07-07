@@ -2,7 +2,7 @@ import { User } from "@supabase/supabase-js";
 import { CreateCarOptionsSchemaType } from "../zod-schema/cars-option-schema";
 
 export type ResponseType = {
-  code: 200 | 401 | 403 | 500;
+  code: 200 | 401 | 403 | 500 | 204;
   message: string;
   data: User | CreateCarOptionsSchemaType | CreateCarOptionsSchemaType[] | null;
 };

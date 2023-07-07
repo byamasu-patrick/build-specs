@@ -27,3 +27,8 @@ export async function getClient(url: string, access_token: string) {
   const response = await axios.get(url, getHeaders(access_token));
   return response.data;
 }
+
+export async function deleteClient(url: string, access_token: string) {
+  const response = await axios.delete(url, getHeaders(access_token));
+  return response.data;
+}

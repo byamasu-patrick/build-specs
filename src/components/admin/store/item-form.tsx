@@ -1,3 +1,4 @@
+import Loading from "@/components/widget/loading-spinner";
 import { postClient } from "@/services/supabase-service";
 import {
   CarOptionsSchemaType,
@@ -56,6 +57,7 @@ export function ItemForm({ setIsNewCar }: ItemProps) {
   const queryClient = useQueryClient();
 
   const {
+    isLoading,
     data,
     error,
     isSuccess,
@@ -101,6 +103,7 @@ export function ItemForm({ setIsNewCar }: ItemProps) {
       formik.setFieldValue("modelYear", 2023);
       formik.setFieldValue("trim", "");
       formik.setFieldValue("version", "");
+      setIsNewCar(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, isSuccess, error]);
@@ -109,7 +112,7 @@ export function ItemForm({ setIsNewCar }: ItemProps) {
     <form method="POST" onSubmit={formik.handleSubmit}>
       <div className="border-b border-gray-900/10 pb-12">
         <h2 className="text-base font-semibold leading-7 text-gray-900">
-          vehicle options details
+          Vehicle options details
         </h2>
         <p className="mt-1 text-sm leading-6 text-gray-600">
           Use the form below to provide all necessary information of the
@@ -365,7 +368,7 @@ export function ItemForm({ setIsNewCar }: ItemProps) {
           type="submit"
           className="rounded-md bg-slate-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
         >
-          Save
+          {isLoading ? <Loading /> : "Save"}
         </button>
       </div>
     </form>

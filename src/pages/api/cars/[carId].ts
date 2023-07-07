@@ -1,7 +1,6 @@
 // Import necessary dependencies and types
 import { ResponseType } from "@/types/api/api-schema";
 import { Database } from "@/types/supabase";
-import { CreateCarOptionsSchemaType } from "@/types/zod-schema/cars-option-schema";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -9,7 +8,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  if (req.method !== "GET")
+  if (req.method !== "DELETE")
     res
       .status(403)
       .json({ code: 403, data: null, message: "Method not allowed" });
@@ -34,20 +33,29 @@ export default async function handler(
   try {
     // Check if a session exists, if there is a session, then proceed. If not return a 401
     if (data.session) {
-      // get all vehicle options by user_id
-      const { data: result, error: carsError } = await supabaseServerClient
-        .from("cars_options")
-        .select("*")
-        .eq("user_id", data.session.user.id);
+      // delete car by id and user id
+      const query = req.query;
+      const { carId } = query;
 
-      const carsData = result as CreateCarOptionsSchemaType[];
+      const {
+        status,
+        count,
+        data: deletedData,
+        statusText,
+      } = await supabaseServerClient
+        .from("cars_options")
+        .delete()
+        .eq("user_id", data.session.user.id)
+        .eq("id", carId);
+
+      console.log(deletedData, count, status, statusText);
 
       // return fetched car options
-      if (carsData && !carsError) {
+      if (status === 204) {
         res.status(200).json({
-          code: 200,
-          data: carsData,
-          message: "Fetched all data",
+          code: 204,
+          data: null,
+          message: statusText,
         });
       }
 
@@ -55,7 +63,7 @@ export default async function handler(
       res.status(401).json({
         code: 401,
         data: null,
-        message: "Failed to get data",
+        message: "Failed to delete data",
       });
     }
 
