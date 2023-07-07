@@ -1,4 +1,4 @@
-import { classNames, convertUnderscoreToCamelCase } from "@/utils/common";
+import { classNames } from "@/utils/common";
 import { useState } from "react";
 import NewCarItem from "./new-item";
 import supabaseClient from "@/utils/supabaseBrowserClient";
