@@ -27,6 +27,7 @@ async function verifyAccount(values: { token: string; email: string }) {
 
 export default function ForgotPassword() {
   // Access the client
+  const queryClient = useQueryClient();
   const [isResendSuccessful, setIsResendSuccessful] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
@@ -47,7 +48,7 @@ export default function ForgotPassword() {
     mutationFn: verifyAccount,
     onSuccess: () => {
       // Invalidate and refetch
-      // queryClient.invalidateQueries({ queryKey: ["auth"] });
+      queryClient.invalidateQueries({ queryKey: ["auth"] });
     },
   });
 

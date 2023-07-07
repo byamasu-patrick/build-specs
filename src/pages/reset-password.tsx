@@ -72,7 +72,7 @@ export default function ResetPassword() {
     mutationFn: resetPassword,
     onSuccess: () => {
       // Invalidate and refetch
-      // queryClient.invalidateQueries({ queryKey: ["auth"] });
+      queryClient.invalidateQueries({ queryKey: ["auth"] });
     },
   });
 

@@ -4,7 +4,7 @@ import {
   FormikCarOptionsSchemaType,
 } from "@/types/zod-schema/cars-option-schema";
 import supabaseClient from "@/utils/supabaseBrowserClient";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import * as Yup from "yup";
@@ -53,7 +53,7 @@ async function createCarInformation(values: FormikCarOptionsSchemaType) {
 }
 
 export function ItemForm({ setIsNewCar }: ItemProps) {
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const {
     data,
@@ -64,7 +64,7 @@ export function ItemForm({ setIsNewCar }: ItemProps) {
     mutationFn: createCarInformation,
     onSuccess: () => {
       // Invalidate and refetch
-      // queryClient.invalidateQueries({ queryKey: ["cars"] });
+      queryClient.invalidateQueries({ queryKey: ["cars"] });
     },
   });
 
