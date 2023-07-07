@@ -1,4 +1,4 @@
-import { type Database } from "@/types/zod-schema/supabase-old";
+import { type Database } from "@/types/supabase";
 
 import { createClient } from "@supabase/supabase-js";
 

@@ -1,6 +1,6 @@
 // Import necessary dependencies and types
 import { ResponseType } from "@/types/api/api-schema";
-import { Database } from "@/types/zod-schema/supabase-old";
+import { Database } from "@/types/supabase";
 import {
   CarOptionsSchemaType,
   CreateCarOptionsSchemaType,
