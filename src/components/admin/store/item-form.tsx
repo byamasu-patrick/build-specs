@@ -65,7 +65,7 @@ export function ItemForm({ setIsNewCar }: ItemProps) {
     mutationFn: createCarInformation,
     onSuccess: () => {
       // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["cars"] });
+      // queryClient.invalidateQueries({ queryKey: ["cars"] });
     },
   });
 

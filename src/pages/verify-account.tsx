@@ -55,7 +55,7 @@ export default function ForgotPassword() {
     mutationFn: verifyAccount,
     onSuccess: () => {
       // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["auth"] });
+      // queryClient.invalidateQueries({ queryKey: ["auth"] });
     },
   });
 
