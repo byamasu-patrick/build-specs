@@ -1,10 +1,5 @@
 import { classNames } from "@/utils/common";
-import {
-  CalendarDaysIcon,
-  CheckCircleIcon,
-  CreditCardIcon,
-  UserCircleIcon,
-} from "@heroicons/react/20/solid";
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 const invoice = {
   subTotal: "$8,800.00",
@@ -100,74 +95,6 @@ export function LatestOrders() {
   return (
     <div className="mx-auto max-full w-full ">
       <div className="mx-auto flex flex-col max-w-2xl items-start lg:mx-0 ">
-        {/* Invoice summary */}
-        {/* <div className="">
-          <h2 className="sr-only">Summary</h2>
-          <div className="rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
-            <dl className="flex flex-wrap">
-              <div className="flex-auto pl-6 pt-6">
-                <dt className="text-sm font-semibold leading-6 text-gray-900">
-                  Amount
-                </dt>
-                <dd className="mt-1 text-base font-semibold leading-6 text-gray-900">
-                  $10,560.00
-                </dd>
-              </div>
-              <div className="flex-none self-end px-6 pt-4">
-                <dt className="sr-only">Status</dt>
-                <dd className="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-600 ring-1 ring-inset ring-green-600/20">
-                  Paid
-                </dd>
-              </div>
-              <div className="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-900/5 px-6 pt-6">
-                <dt className="flex-none">
-                  <span className="sr-only">Client</span>
-                  <UserCircleIcon
-                    className="h-6 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                </dt>
-                <dd className="text-sm font-medium leading-6 text-gray-900">
-                  Alex Curren
-                </dd>
-              </div>
-              <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
-                <dt className="flex-none">
-                  <span className="sr-only">Due date</span>
-                  <CalendarDaysIcon
-                    className="h-6 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                </dt>
-                <dd className="text-sm leading-6 text-gray-500">
-                  <time dateTime="2023-01-31">January 31, 2023</time>
-                </dd>
-              </div>
-              <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
-                <dt className="flex-none">
-                  <span className="sr-only">Status</span>
-                  <CreditCardIcon
-                    className="h-6 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                </dt>
-                <dd className="text-sm leading-6 text-gray-500">
-                  Paid with MasterCard
-                </dd>
-              </div>
-            </dl>
-            <div className="mt-6 border-t border-gray-900/5 px-6 py-6">
-              <a
-                href="#"
-                className="text-sm font-semibold leading-6 text-gray-900"
-              >
-                Download receipt <span aria-hidden="true">&rarr;</span>
-              </a>
-            </div>
-          </div>
-        </div> */}
-
-        {/* Invoice */}
         <div className="-mx-4 sm:mx-0 lg:col-span-2 lg:row-span-2 lg:row-end-2">
           <h2 className="text-base font-semibold leading-6 text-gray-900">
             Invoice
@@ -321,7 +248,6 @@ export function LatestOrders() {
         </div>
 
         <div className="lg:col-start-3">
-          {/* Activity feed */}
           <h2 className="text-sm font-semibold leading-6 text-gray-900">
             Activity
           </h2>
@@ -340,9 +266,11 @@ export function LatestOrders() {
                 </div>
                 {activityItem.type === "commented" ? (
                   <>
-                    <img
-                      src={activityItem.person.imageUrl}
+                    <Image
+                      src={activityItem.person.imageUrl as string}
                       alt=""
+                      width={24}
+                      height={24}
                       className="relative mt-3 h-6 w-6 flex-none rounded-full bg-gray-50"
                     />
                     <div className="flex-auto rounded-md p-3 ring-1 ring-inset ring-gray-200">
