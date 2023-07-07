@@ -52,7 +52,7 @@ export default function ResetPassword() {
   const router = useRouter();
   const params: ParsedUrlQuery = router.query;
 
-  console.log(decodeUrl(_q as string));
+  // console.log(decodeUrl(_q as string));
 
   const initialValues: {
     token: string;
