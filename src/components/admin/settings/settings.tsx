@@ -51,11 +51,11 @@ export function Settings() {
               <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
                 <div className="col-span-full flex items-center gap-x-8">
                   <Image
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    src="https://res.cloudinary.com/dcszwfxwj/image/upload/v1688726908/icons8-person-96_1_lqo4dx.png"
                     alt=""
-                    className="h-24 w-24 flex-none rounded-lg bg-gray-800 object-cover"
-                    height={96}
-                    width={96}
+                    className="h-24 w-24 flex-none rounded-lg border-2 bg-white object-cover"
+                    height={97}
+                    width={97}
                   />
                   <div>
                     <button

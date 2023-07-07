@@ -1,7 +1,9 @@
+import ErrorAlert from "@/components/widget/error-alert";
 import supabaseClient from "@/utils/supabaseBrowserClient";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import * as Yup from "yup";
 
 // Define the validation schema
@@ -15,7 +17,10 @@ const signSchema = Yup.object().shape({
 });
 
 export default function Login() {
+  const [isResendSuccessful, setIsResendSuccessful] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
   const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -23,20 +28,28 @@ export default function Login() {
     },
     validationSchema: signSchema,
     onSubmit: async (values) => {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email: values.email,
-        password: values.password,
-      });
-
+      const { data, error } = await supabaseClient.auth.signInWithPassword(
+        values
+      );
+      if (!error && data) {
+        void router.push("/home");
+      }
       if (error) {
-        alert(error.message);
-      } else if (data && data.session) {
-        await router.push("/home");
+        setIsResendSuccessful(true);
+        setMessage(error.message);
       }
     },
   });
+
   return (
     <>
+      {isResendSuccessful && (
+        <ErrorAlert
+          isResendSuccessful={isResendSuccessful}
+          setIsResendSuccessful={setIsResendSuccessful}
+          message={message}
+        />
+      )}
       <div className="flex min-h-full flex-1 items-center flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
         <div className="w-full max-w-sm space-y-10">
           <div>

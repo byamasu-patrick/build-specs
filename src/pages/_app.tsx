@@ -1,9 +1,6 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import {
-  type Session,
-  SessionContextProvider,
-} from "@supabase/auth-helpers-react";
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import supabaseClient from "@/utils/supabaseBrowserClient";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 

@@ -13,3 +13,11 @@ export function classNames(
 ): string {
   return classes.filter(Boolean).join(" ");
 }
+
+export function convertUnderscoreToCamelCase(str: string) {
+  const words = str.split("_");
+  const camelCaseWords = words.map((word) => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  });
+  return camelCaseWords.join(" ");
+}

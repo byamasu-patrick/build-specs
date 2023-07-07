@@ -7,12 +7,26 @@ import { Dashboard } from "@/components/admin/home/dashboard";
 import { MainNavigation } from "@/components/admin/main-navigation/main-navigation-desktop";
 import SearchDesktop from "@/components/admin/search/search-desktop";
 import MainNavigationMobile from "@/components/admin/main-navigation/main-navigation-mobile";
+import supabaseClient from "@/utils/supabaseBrowserClient";
+import { GetServerSideProps } from "next";
 
 export const user = {
   name: "Tom Cook",
   email: "tom@example.com",
   imageUrl:
     "https://res.cloudinary.com/dcszwfxwj/image/upload/v1688691020/build-specs/icons8-avatar-50_4_tmflru.png",
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  // Get our logged user
+  const { data, error } = await supabaseClient.auth.getSession();
+  // Check if the user is logged
+  if (data === null || error) {
+    // Redirect if no logged in
+    return { props: {}, redirect: { destination: "/" } };
+  }
+  // If logged return the user
+  return { props: { ...data } };
 };
 
 export default function Home() {
