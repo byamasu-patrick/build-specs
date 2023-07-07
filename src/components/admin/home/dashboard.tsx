@@ -1,8 +1,15 @@
+import Settings from "../settings/settings";
+import MainStore from "../store/main-store";
 import { Activity } from "./activitiy";
 import LatestOrders from "./latest-orders";
 
-export function Dashboard() {
-  return (
+export function Dashboard({ currentTab }: { currentTab: number }) {
+  const renderLeftComponent = () => {
+    if (currentTab === 5) return <MainStore />;
+    else if (currentTab === 1) return <Activity />;
+    else return <Activity />;
+  };
+  return currentTab !== 6 ? (
     <main className="-mt-24 pb-8 h-screen">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h1 className="sr-only">Page title</h1>
@@ -15,9 +22,7 @@ export function Dashboard() {
                 Section title
               </h2>
               <div className="overflow-hidden rounded-lg bg-white shadow">
-                <div className="p-6">
-                  <Activity />
-                </div>
+                <div className="p-6">{renderLeftComponent()}</div>
               </div>
             </section>
           </div>
@@ -36,6 +41,12 @@ export function Dashboard() {
             </section>
           </div>
         </div>
+      </div>
+    </main>
+  ) : (
+    <main className="-mt-24 pb-8 h-screen">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+        <Settings />
       </div>
     </main>
   );
