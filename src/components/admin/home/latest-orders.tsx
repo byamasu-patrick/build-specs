@@ -405,7 +405,7 @@ export function LatestOrders() {
               width={24}
             />
             <form action="#" className="relative flex-auto">
-              <div className="overflow-hidden rounded-lg pb-12 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600">
+              <div className="overflow-hidden rounded-lg pb-12 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-slate-700">
                 <label htmlFor="comment" className="sr-only">
                   Add your comment
                 </label>
@@ -413,7 +413,7 @@ export function LatestOrders() {
                   rows={2}
                   name="comment"
                   id="comment"
-                  className="block w-full p-2 resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  className="block w-full p-2 resize-none border-none bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   placeholder="Add your comment..."
                   defaultValue={""}
                 />
