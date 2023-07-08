@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import SuccessAlert from "@/components/widget/success-alert";
 import { ParsedUrlQuery } from "querystring";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
+import Loading from "@/components/widget/loading-spinner";
 // Define the validation schema
 const signSchema = Yup.object().shape({
   token: Yup.string()
@@ -40,6 +41,7 @@ export default function ForgotPassword() {
   };
 
   const {
+    isLoading,
     data,
     error,
     isSuccess,
@@ -148,7 +150,7 @@ export default function ForgotPassword() {
                 }
                 className="font-semibold px-2 text-slate-800 focus:ring-slate-950 hover:text-slate-950 focus:border focus:border-dashed  focus:border-spacing-2 focus:rounded-md"
               >
-                Resend code
+                {isLoading && !error ? <Loading /> : "Resend code"}
               </button>
             </p>
           </form>

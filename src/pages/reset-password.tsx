@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { VerifyEmailOtpParams } from "@supabase/supabase-js";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { ParsedUrlQuery } from "querystring";
+import Loading from "@/components/widget/loading-spinner";
 
 const signupSchema = Yup.object().shape({
   token: Yup.string()
@@ -64,6 +65,7 @@ export default function ResetPassword() {
     confirmPassword: "",
   };
   const {
+    isLoading,
     data,
     error,
     isSuccess,
@@ -158,7 +160,7 @@ export default function ResetPassword() {
               type="submit"
               className="flex w-full justify-center bg-slate-900 hover:bg-slate-950 rounded-md ring-slate-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white hover:ring-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
             >
-              Reset
+              {isLoading && !error ? <Loading /> : "Reset"}
             </button>
           </div>
         </form>

@@ -1,4 +1,5 @@
 import ErrorAlert from "@/components/widget/error-alert";
+import Loading from "@/components/widget/loading-spinner";
 import supabaseClient from "@/utils/supabaseBrowserClient";
 import { useFormik } from "formik";
 import Link from "next/link";
@@ -17,6 +18,7 @@ const signSchema = Yup.object().shape({
 });
 
 export default function Login() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isResendSuccessful, setIsResendSuccessful] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const router = useRouter();
@@ -28,13 +30,16 @@ export default function Login() {
     },
     validationSchema: signSchema,
     onSubmit: async (values) => {
+      setIsLoading(true);
       const { data, error } = await supabaseClient.auth.signInWithPassword(
         values
       );
       if (!error && data) {
+        setIsLoading(false);
         void router.push("/home");
       }
       if (error) {
+        setIsLoading(false);
         setIsResendSuccessful(true);
         setMessage(error.message);
       }
@@ -126,7 +131,7 @@ export default function Login() {
                 type="submit"
                 className="flex w-full justify-center bg-slate-900 hover:bg-slate-950 rounded-md ring-slate-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white hover:ring-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
               >
-                Sign in
+                {isLoading ? <Loading /> : "Sign in"}
               </button>
             </div>
           </form>

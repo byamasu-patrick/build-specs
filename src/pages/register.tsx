@@ -3,9 +3,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import supabaseClient from "@/utils/supabaseBrowserClient";
 import { useRouter } from "next/router";
-import { encodeUrl } from "@/utils/common";
 import { useState } from "react";
 import SuccessAlert from "@/components/widget/success-alert";
+import Loading from "@/components/widget/loading-spinner";
 
 const signupSchema = Yup.object().shape({
   username: Yup.string()
@@ -22,6 +22,7 @@ const signupSchema = Yup.object().shape({
 });
 
 export default function Register() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isResendSuccessful, setIsResendSuccessful] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const router = useRouter();
@@ -34,6 +35,7 @@ export default function Register() {
     },
     validationSchema: signupSchema,
     onSubmit: async (values) => {
+      setIsLoading(true);
       const { data, error } = await supabaseClient.auth.signUp({
         email: values.email,
         password: values.password,
@@ -49,6 +51,7 @@ export default function Register() {
         setMessage(
           "An email has been sent to your account with a verification token"
         );
+        setIsLoading(false);
         setIsResendSuccessful(true);
         setTimeout(() => {
           values = {
@@ -57,9 +60,13 @@ export default function Register() {
             password: "",
             username: "",
           };
+
           void router.push(`verify-account/?_q=${email}` as string);
         }, 1000);
-      } else if (error) alert(error.message);
+      } else if (error) {
+        setIsLoading(false);
+        alert(error.message);
+      }
     },
   });
 
@@ -149,7 +156,7 @@ export default function Register() {
                 type="submit"
                 className="flex w-full justify-center bg-slate-900 hover:bg-slate-950 rounded-md ring-slate-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white hover:ring-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
               >
-                Create Account
+                {isLoading ? <Loading /> : "Create Account"}
               </button>
             </div>
           </form>
