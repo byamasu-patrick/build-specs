@@ -1,23 +1,32 @@
 import { Dispatch, Fragment, SetStateAction, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/24/outline";
-import ItemForm from "./item-form";
+import { CreateForm } from "./create-form";
+import { CreateCarOptionsSchemaType } from "@/types/zod-schema/cars-option-schema";
+import UpdateForm from "./update-form";
 
 type ItemProps = {
   isNewCar: boolean;
   setIsNewCar: Dispatch<SetStateAction<boolean>>;
-};
+} & (
+  | {
+      car: CreateCarOptionsSchemaType;
+      formType: "update";
+    }
+  | {
+      formType: "create";
+    }
+);
 
-export default function NewCarItem({ isNewCar, setIsNewCar }: ItemProps) {
+export default function NewCarItem(props: ItemProps) {
   const cancelButtonRef = useRef(null);
 
   return (
-    <Transition.Root show={isNewCar} as={Fragment}>
+    <Transition.Root show={props.isNewCar} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-10"
         initialFocus={cancelButtonRef}
-        onClose={setIsNewCar}
+        onClose={props.setIsNewCar}
       >
         <Transition.Child
           as={Fragment}
@@ -46,7 +55,14 @@ export default function NewCarItem({ isNewCar, setIsNewCar }: ItemProps) {
                 <div>
                   <div className="mt-3 text-start sm:mt-5">
                     <div className="mt-2 pb-6">
-                      <ItemForm setIsNewCar={setIsNewCar} />
+                      {props.formType === "create" ? (
+                        <CreateForm setIsNewCar={props.setIsNewCar} />
+                      ) : (
+                        <UpdateForm
+                          car={props.car}
+                          setShowUpdateModal={props.setIsNewCar}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>

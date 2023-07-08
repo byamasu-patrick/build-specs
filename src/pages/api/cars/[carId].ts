@@ -37,18 +37,11 @@ export default async function handler(
       const query = req.query;
       const { carId } = query;
 
-      const {
-        status,
-        count,
-        data: deletedData,
-        statusText,
-      } = await supabaseServerClient
+      const { status, statusText } = await supabaseServerClient
         .from("cars_options")
         .delete()
         .eq("user_id", data.session.user.id)
         .eq("id", carId);
-
-      console.log(deletedData, count, status, statusText);
 
       // return fetched car options
       if (status === 204) {

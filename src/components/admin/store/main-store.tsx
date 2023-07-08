@@ -1,38 +1,22 @@
 import { classNames } from "@/utils/common";
 import { useEffect, useState } from "react";
 import NewCarItem from "./new-item";
-import supabaseClient from "@/utils/supabaseBrowserClient";
-import { deleteClient, getClient } from "@/services/supabase-service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CreateCarOptionsSchemaType } from "@/types/zod-schema/cars-option-schema";
-import { ResponseType } from "@/types/api/api-schema";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import {
+  deleteCarFromSupabase,
+  getCarsFromSupabase,
+} from "@/services/car-option-service";
 import WarningModal from "@/components/widget/cars/delete-modal";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { CreateCarOptionsSchemaType } from "@/types/zod-schema/cars-option-schema";
+import { UpdateForm } from "./update-form";
 
-async function getCarsFromSupabase(): Promise<
-  CreateCarOptionsSchemaType[] | []
-> {
-  const { data } = await supabaseClient.auth.getSession();
-  const response = (await getClient(
-    "/api/cars/get-cars-by-user",
-    data.session?.access_token as string
-  )) as ResponseType;
-
-  return response.data as CreateCarOptionsSchemaType[];
-}
-
-async function deleteCarFromSupabase(id: number): Promise<ResponseType> {
-  const { data } = await supabaseClient.auth.getSession();
-  const response = (await deleteClient(
-    `/api/cars/${id}`,
-    data.session?.access_token as string
-  )) as ResponseType;
-
-  return response;
-}
 export function MainStore() {
   const queryClient = useQueryClient();
   const [isNewCar, setIsNewCar] = useState<boolean>(false);
+  const [isShowUpdateModal, setIsShowUpdateModal] = useState<boolean>(false);
+  const [carOptions, setCarOptions] =
+    useState<CreateCarOptionsSchemaType | null>();
   const [carId, setCarId] = useState<number>(-1);
   const [isWarningOpen, setIsWarningOpen] = useState<boolean>(false);
 
@@ -58,7 +42,6 @@ export function MainStore() {
       queryClient.invalidateQueries({ queryKey: ["cars"] });
     },
   });
-
   const handleCarDeletion = () => {
     if (carId !== -1) {
       deleteCar(carId);
@@ -215,9 +198,15 @@ export function MainStore() {
                     "relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium"
                   )}
                 >
-                  <a href="#" className="text-slate-800 hover:text-slate-950">
+                  <button
+                    onClick={() => {
+                      setCarOptions(car);
+                      setIsShowUpdateModal(true);
+                    }}
+                    className="text-slate-800 hover:text-slate-950"
+                  >
                     Edit<span className="sr-only">, {car.make}</span>
-                  </a>
+                  </button>
                 </td>
 
                 <td
@@ -263,7 +252,23 @@ export function MainStore() {
           handleDeletion={handleCarDeletion}
         />
       )}
-      {isNewCar && <NewCarItem isNewCar={isNewCar} setIsNewCar={setIsNewCar} />}
+
+      {isNewCar && (
+        <NewCarItem
+          isNewCar={isNewCar}
+          setIsNewCar={setIsNewCar}
+          formType="create"
+        />
+      )}
+
+      {carOptions && isShowUpdateModal && (
+        <NewCarItem
+          isNewCar={isShowUpdateModal}
+          setIsNewCar={setIsShowUpdateModal}
+          formType="update"
+          car={carOptions}
+        />
+      )}
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">

@@ -23,6 +23,15 @@ export async function postClient(
   return response.data;
 }
 
+export async function updateClient(
+  url: string,
+  values: CarOptionsSchemaType,
+  access_token: string
+) {
+  const response = await axios.patch(url, values, getHeaders(access_token));
+  return response.data;
+}
+
 export async function getClient(url: string, access_token: string) {
   const response = await axios.get(url, getHeaders(access_token));
   return response.data;
