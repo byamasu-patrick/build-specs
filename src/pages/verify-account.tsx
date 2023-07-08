@@ -137,7 +137,7 @@ export default function ForgotPassword() {
                 type="submit"
                 className="flex w-full justify-center bg-slate-900 hover:bg-slate-950 rounded-md ring-slate-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white hover:ring-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
               >
-                Verify
+                {isLoading && !error ? <Loading /> : "Verify"}
               </button>
             </div>
 
@@ -150,7 +150,7 @@ export default function ForgotPassword() {
                 }
                 className="font-semibold px-2 text-slate-800 focus:ring-slate-950 hover:text-slate-950 focus:border focus:border-dashed  focus:border-spacing-2 focus:rounded-md"
               >
-                {isLoading && !error ? <Loading /> : "Resend code"}
+                Resend code
               </button>
             </p>
           </form>
