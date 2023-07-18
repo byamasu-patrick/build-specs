@@ -82,7 +82,13 @@ export default function WarningModal({
                     className="inline-flex w-full justify-center rounded-md hover:bg-slate-700 bg-red-600 px-3 py-1 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
                     onClick={() => handleDeletion()}
                   >
-                    {isLoading ? <Loading /> : "Delete"}
+                    {isLoading ? (
+                      <>
+                        <Loading /> Deleting
+                      </>
+                    ) : (
+                      "Delete"
+                    )}
                   </button>
                 </div>
               </Dialog.Panel>

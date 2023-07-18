@@ -19,14 +19,17 @@ export const user = {
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   // Get our logged user
-  const { data, error } = await supabaseClient.auth.getSession();
+  const {
+    data: { session },
+    error,
+  } = await supabaseClient.auth.getSession();
   // Check if the user is logged
-  if (data === null || error) {
+  if (!session || error) {
     // Redirect if no logged in
-    return { props: {}, redirect: { destination: "/" } };
+    return { props: {}, redirect: { destination: "/", permanent: false } };
   }
   // If logged return the user
-  return { props: { ...data } };
+  return { props: { ...session } };
 };
 
 export default function Home() {
@@ -195,7 +198,7 @@ export default function Home() {
           )}
         </Popover>
         <Dashboard currentTab={currentTab} />
-        <footer>
+        <footer className="relative">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <div className="border-t border-gray-200 py-8 text-center text-sm text-gray-500 sm:text-left">
               <span className="block sm:inline">

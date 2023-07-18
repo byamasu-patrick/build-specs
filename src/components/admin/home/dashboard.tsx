@@ -44,7 +44,7 @@ export function Dashboard({ currentTab }: { currentTab: number }) {
       </div>
     </main>
   ) : (
-    <main className="-mt-24 pb-8 h-screen">
+    <main className="-mt-24 pb-8">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <Settings />
       </div>
