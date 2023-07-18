@@ -20,12 +20,6 @@ export const navigation: IMainNavType[] = [
     id: 1,
   },
   {
-    name: "Profile",
-    href: "#",
-    current: false,
-    id: 2,
-  },
-  {
     name: "Invoice Requests",
     href: "#",
     current: false,
