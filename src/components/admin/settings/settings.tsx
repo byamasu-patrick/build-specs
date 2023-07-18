@@ -7,7 +7,7 @@ import {
   SignalIcon,
 } from "@heroicons/react/20/solid";
 import Image from "next/image";
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import supabaseClient from "@/utils/supabaseBrowserClient";
 import { useFormik } from "formik";
